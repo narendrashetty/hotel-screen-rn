@@ -13,6 +13,8 @@ import {
 const maxWidth = Dimensions.get('window').width;
 const maxHeight = Dimensions.get('window').height;
 
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
 const REVIEWS = [
   { key: 'all', label: 'All Reviews' },
   { key: 'location', label: 'Location' },
@@ -37,7 +39,7 @@ class Review extends Component {
   componentDidMount() {
     this.listener = this.state.currentScrollPosition.addListener(pos => {
       const ratio = pos.value / 310;
-      this.r.scrollToOffset({
+      this.r.getNode().scrollToOffset({
         animated: false,
         offset: ratio * maxWidth
       });
@@ -74,7 +76,7 @@ class Review extends Component {
   _renderSeperator = () => <View style={{ width: 10 }} />;
   renderHeadScroller = () => {
     return (
-      <FlatList
+      <AnimatedFlatList
         data={REVIEWS}
         renderItem={this.renderItem}
         scrollEventThrottle={1}
@@ -85,15 +87,20 @@ class Review extends Component {
         horizontal={true}
         ItemSeparatorComponent={this._renderSeperator}
         style={{ paddingLeft: 10, paddingRight: 10, marginTop: 10 }}
-        onScroll={Animated.event([
-          {
-            nativeEvent: {
-              contentOffset: {
-                x: this.state.currentScrollPosition
+        onScroll={Animated.event(
+          [
+            {
+              nativeEvent: {
+                contentOffset: {
+                  x: this.state.currentScrollPosition
+                }
               }
             }
+          ],
+          {
+            useNativeDriver: true
           }
-        ])}
+        )}
       />
     );
   };
@@ -146,7 +153,7 @@ class Review extends Component {
 
   renderBody = () => {
     return (
-      <FlatList
+      <AnimatedFlatList
         ref={r => (this.r = r)}
         data={REVIEWS1}
         horizontal={true}
