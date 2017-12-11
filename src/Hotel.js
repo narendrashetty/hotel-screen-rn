@@ -13,13 +13,13 @@ const maxWidth = Dimensions.get('window').width;
 
 export default class Hotel extends Component {
   state = {
-    screenAnimator: new Animated.Value(1)
+    screenAnimator: new Animated.Value(0)
   };
 
   gotoReviewScreen = () => {
     Animated.timing(this.state.screenAnimator, {
       toValue: 1,
-      duration: 3000
+      duration: 300
     }).start();
   };
 
